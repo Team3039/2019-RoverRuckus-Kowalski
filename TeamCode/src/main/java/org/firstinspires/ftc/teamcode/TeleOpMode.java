@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -20,7 +21,9 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public DcMotor intake = null;
     public DcMotor intake2 = null;
     public DcMotor extension = null;
-    public DcMotor pivot = null;
+    public DcMotor arm = null;
+    public Servo pivot = null;
+
 
 
 
@@ -36,8 +39,8 @@ public class TeleOpMode extends LinearOpMode implements Values {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake2 = hardwareMap.get(DcMotor.class, "intake2");
         extension = hardwareMap.get (DcMotor.class, "extension");
-        pivot = hardwareMap.get (DcMotor.class, "pivot");
-
+        arm = hardwareMap.get (DcMotor.class, "arm");
+        pivot = hardwareMap.get (Servo.class, "pivot");
 
 
 
@@ -46,7 +49,10 @@ public class TeleOpMode extends LinearOpMode implements Values {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotor.Direction.FORWARD);
+        intake2.setDirection (DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
+        arm.setDirection (DcMotor.Direction.FORWARD);
+        pivot.setDirection(Servo.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
@@ -59,10 +65,10 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double rightFrontPower;
             double leftBackPower;
             double rightBackPower;
-            double pivotPower;
+            double armPower;
             double drive = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x * -1;
-            double pivotStick = gamepad2.right_stick_y;
+            double armStick = gamepad2.right_stick_y;
 
             if (gamepad1.left_bumper) {
                 leftFrontDrive.setPower(-strafeSpeed);
@@ -95,15 +101,21 @@ public class TeleOpMode extends LinearOpMode implements Values {
                 intake2.setPower (-.4);
                 // If the pilot does not press the a button then the robot will not move.
             }
+            if (gamepad2.left_bumper) {
+                pivot.setPosition(-.5);
+            }
+            else if (gamepad2.right_bumper) {
+                pivot.setPosition(.5);
+            }
             else {
-                intake.setPower(0);
-                intake2.setPower(0);
+                pivot.setPosition(0);
+
             }
 
 
 
-             pivotPower = Range.clip( pivotStick, -.95, .95 );
-             pivot.setPower(pivotPower);
+             armPower = Range.clip( armStick, -.95, .95 );
+             arm.setPower(armPower);
 
              if (gamepad1.left_trigger > .5){
                  extension.setPower (.4);
