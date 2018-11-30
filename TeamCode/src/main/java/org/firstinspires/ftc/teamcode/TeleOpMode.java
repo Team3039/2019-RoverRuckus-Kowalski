@@ -19,7 +19,6 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public DcMotor rightBackDrive = null;
     public DcMotor intake = null;
     public DcMotor intake2 = null;
-    public DcMotor arm = null;
     public DcMotor extension = null;
     public DcMotor pivot = null;
 
@@ -36,7 +35,6 @@ public class TeleOpMode extends LinearOpMode implements Values {
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake2 = hardwareMap.get(DcMotor.class, "intake2");
-        arm = hardwareMap.get (DcMotor.class,"arm");
         extension = hardwareMap.get (DcMotor.class, "extension");
         pivot = hardwareMap.get (DcMotor.class, "pivot");
 
@@ -48,15 +46,11 @@ public class TeleOpMode extends LinearOpMode implements Values {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotor.Direction.FORWARD);
-        arm.setDirection(DcMotor.Direction.FORWARD);
-         extension.setDirection(DcMotor.Direction.FORWARD);
+        extension.setDirection(DcMotor.Direction.FORWARD);
 
         waitForStart();
         runtime.reset();
 
-         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         while (opModeIsActive()) {
 
@@ -65,11 +59,9 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double rightFrontPower;
             double leftBackPower;
             double rightBackPower;
-            double armPower;
             double pivotPower;
             double drive = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x * -1;
-            double armStick = gamepad2.left_stick_y;
             double pivotStick = gamepad2.right_stick_y;
 
             if (gamepad1.left_bumper) {
@@ -109,8 +101,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
             }
 
 
-             armPower = Range.clip(armStick, -.95, .95);
-             arm.setPower (armPower);
+
              pivotPower = Range.clip( pivotStick, -.95, .95 );
              pivot.setPower(pivotPower);
 
@@ -126,7 +117,6 @@ public class TeleOpMode extends LinearOpMode implements Values {
 
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Arm Encoder", arm.getCurrentPosition());
             telemetry.update();
         }
 
