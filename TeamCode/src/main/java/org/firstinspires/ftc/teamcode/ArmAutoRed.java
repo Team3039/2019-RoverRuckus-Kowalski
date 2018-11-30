@@ -14,7 +14,6 @@ public class ArmAutoRed extends TeleOpMode implements Values {
     private DcMotor leftBackDrive= null;
     private DcMotor rightBackDrive = null;
     private DcMotor intake = null;
-    private DcMotor arm = null;
     private DcMotor extension = null;
     private DcMotor pivot = null;
 
@@ -32,7 +31,6 @@ public class ArmAutoRed extends TeleOpMode implements Values {
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
         intake = hardwareMap.get(DcMotor.class, "intake");
-        arm = hardwareMap.get (DcMotor.class,"arm");
         extension = hardwareMap.get (DcMotor.class, "extension");
         pivot = hardwareMap.get (DcMotor.class, "pivot");
 
@@ -41,7 +39,6 @@ public class ArmAutoRed extends TeleOpMode implements Values {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         intake.setDirection(DcMotor.Direction.FORWARD);
-        arm.setDirection(DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
 
 
