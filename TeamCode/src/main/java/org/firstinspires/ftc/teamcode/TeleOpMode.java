@@ -67,7 +67,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double armPower;
             double drive = gamepad1.left_stick_y;
             double turn = -gamepad1.right_stick_x;
-            double armStick = gamepad2.right_stick_x;
+            double armStick = gamepad2.left_stick_y;
 
             if (gamepad1.left_bumper) {
                 strafeLeft();
