@@ -20,8 +20,8 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public DcMotor leftBackDrive= null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotor intake = null;
-    public DcMotor intake2 = null;
+    public DcMotor intakeA = null;
+    public DcMotor intakeB = null;
 
     public DcMotor extension = null;
     public DcMotor arm = null;
@@ -37,8 +37,8 @@ public class TeleOpMode extends LinearOpMode implements Values {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        intake2 = hardwareMap.get(DcMotor.class, "intake2");
+        intakeA = hardwareMap.get(DcMotor.class, "intake");
+        intakeB = hardwareMap.get(DcMotor.class, "intake2");
         extension = hardwareMap.get (DcMotor.class, "extension");
         arm = hardwareMap.get (DcMotor.class, "arm");
         intakePivot = hardwareMap.get (Servo.class, "intakePivot");
@@ -48,8 +48,8 @@ public class TeleOpMode extends LinearOpMode implements Values {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        intake2.setDirection (DcMotor.Direction.FORWARD);
+        intakeA.setDirection(DcMotor.Direction.FORWARD);
+        intakeB.setDirection (DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection (DcMotor.Direction.FORWARD);
         intakePivot.setDirection(Servo.Direction.FORWARD);
@@ -66,21 +66,15 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double rightBackPower;
             double armPower;
             double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x * -1;
+            double turn = gamepad1.right_stick_x;
             double armStick = gamepad2.right_stick_y;
 
             if (gamepad1.left_bumper) {
-                leftFrontDrive.setPower(-strafeSpeed);
-                leftBackDrive.setPower(strafeSpeed);
-                rightFrontDrive.setPower(strafeSpeed);
-                rightBackDrive.setPower(-strafeSpeed);
+                strafeLeft();
             }
             else if (gamepad1.right_bumper) {
-                rightFrontDrive.setPower(-strafeSpeed);
-                rightBackDrive.setPower(strafeSpeed);
-                leftFrontDrive.setPower(strafeSpeed);
-                leftBackDrive.setPower(-strafeSpeed);
-            }// If the pilot presses the right bumper the robot will strafe to the right
+                strafeRight();
+            }
             else {
                 leftFrontPower = Range.clip(drive + turn, -.95, .95);
                 rightFrontPower = Range.clip(drive - turn, -.95, .95);
@@ -92,37 +86,31 @@ public class TeleOpMode extends LinearOpMode implements Values {
                 rightBackDrive.setPower(rightBackPower);
             }
 
+            //Arm Control
+            armPower = Range.clip( armStick, -.95, .95 );
+            arm.setPower(armPower);
+
+            //Button Inputs
             if (gamepad2.a) {
-                intake.setPower(.4);
-                intake2.setPower (.4);
-                // If the pilot were to press the A button the robot would move forward at a speed of .4
+                getMineral();
             } else if (gamepad2.x){
-                intake.setPower(-.4);
-                intake2.setPower (-.4);
-                // If the pilot does not press the a button then the robot will not move.
+                shootMineral();
             }
-            if (gamepad2.left_bumper) {
-                intakePivot.setPosition(-.5);
-            }
-            else if (gamepad2.right_bumper) {
-                intakePivot.setPosition(.5);
+            if (gamepad2.y) {
+                setIntakePosition(intakeDown);
             }
             else {
-                intakePivot.setPosition(0);
-
+                setIntakePosition(intakeStraight);
             }
 
-             armPower = Range.clip( armStick, -.95, .95 );
-             arm.setPower(armPower);
-
              if (gamepad1.left_trigger > .5){
-                 extension.setPower (.4);
+                 setExtensionPower(.4);
              }
              else if(gamepad1.right_trigger>.5) {
-                  extension.setPower (-.4);
+                 setExtensionPower(-.4);
              }
              else {
-                 extension.setPower(0);
+                 setExtensionPower(0);
              }
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -130,5 +118,56 @@ public class TeleOpMode extends LinearOpMode implements Values {
         }
 
     }
+
+    public void getMineral() {
+        intakeA.setPower(.4);
+        intakeB.setPower(.4);
+    }
+
+    public void shootMineral() {
+        intakeA.setPower(-.4);
+        intakeB.setPower(-.4);
+    }
+
+    public void setIntakePosition(double position) {
+        intakePivot.setPosition(position);
+    }
+
+    public void setExtensionPower(double power) {
+        extension.setPower(power);
+    }
+
+    public void setArmPower(double power) {
+        arm.setPower(power);
+    }
+
+    public void delatch() {
+        latch.setPosition(-1);
+    }
+
+    public void latch() {
+        latch.setPosition(1);
+    }
+    public void strafeLeft() {
+        leftFrontDrive.setPower(-strafeSpeed);
+        leftBackDrive.setPower(strafeSpeed);
+        rightFrontDrive.setPower(strafeSpeed);
+        rightBackDrive.setPower(-strafeSpeed);
+    }
+
+    public void strafeRight() {
+        rightFrontDrive.setPower(-strafeSpeed);
+        rightBackDrive.setPower(strafeSpeed);
+        leftFrontDrive.setPower(strafeSpeed);
+        leftBackDrive.setPower(-strafeSpeed);
+    }
+
+    public void drive(double power) {
+        leftFrontDrive.setPower(-power);
+        rightFrontDrive.setPower(power);
+        leftBackDrive.setPower(-power);
+        rightBackDrive.setPower(power);
+    }
+
 
 }
