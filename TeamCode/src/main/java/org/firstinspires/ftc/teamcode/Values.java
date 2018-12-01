@@ -11,10 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public interface Values {
 
      double strafeSpeed= .7;
-     double driveSpeed = .7;
-     double turningSpeed= .5;
-     double intakeDown = -1;
-     double intakeStraight = 0;
+     double intakeDown = 0;
+     double intakeStraight = .5;
 
 }
 

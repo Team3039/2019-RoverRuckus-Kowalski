@@ -33,12 +33,12 @@ public class TeleOpMode extends LinearOpMode implements Values {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        intakeA = hardwareMap.get(DcMotor.class, "intake");
-        intakeB = hardwareMap.get(DcMotor.class, "intake2");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftRearMotor");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightRearMotor");
+        intakeA = hardwareMap.get(DcMotor.class, "intakeA");
+        intakeB = hardwareMap.get(DcMotor.class, "intakeB");
         extension = hardwareMap.get (DcMotor.class, "extension");
         arm = hardwareMap.get (DcMotor.class, "arm");
         intakePivot = hardwareMap.get (Servo.class, "intakePivot");
@@ -65,8 +65,8 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double leftBackPower;
             double rightBackPower;
             double armPower;
-            double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
+            double drive = gamepad1.left_stick_y;
+            double turn = -gamepad1.right_stick_x;
             double armStick = gamepad2.right_stick_y;
 
             if (gamepad1.left_bumper) {
@@ -93,8 +93,11 @@ public class TeleOpMode extends LinearOpMode implements Values {
             //Button Inputs
             if (gamepad2.a) {
                 getMineral();
-            } else if (gamepad2.x){
+            } else if (gamepad2.b){
                 shootMineral();
+            }
+            else {
+                stopMineral();
             }
             if (gamepad2.y) {
                 setIntakePosition(intakeDown);
@@ -129,6 +132,10 @@ public class TeleOpMode extends LinearOpMode implements Values {
         intakeB.setPower(-.4);
     }
 
+    public void stopMineral() {
+        intakeA.setPower(0);
+        intakeB.setPower(0);
+    }
     public void setIntakePosition(double position) {
         intakePivot.setPosition(position);
     }
@@ -148,14 +155,14 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public void latch() {
         latch.setPosition(1);
     }
-    public void strafeLeft() {
+    public void strafeRight() {
         leftFrontDrive.setPower(-strafeSpeed);
         leftBackDrive.setPower(strafeSpeed);
         rightFrontDrive.setPower(strafeSpeed);
         rightBackDrive.setPower(-strafeSpeed);
     }
 
-    public void strafeRight() {
+    public void strafeLeft() {
         rightFrontDrive.setPower(-strafeSpeed);
         rightBackDrive.setPower(strafeSpeed);
         leftFrontDrive.setPower(strafeSpeed);
