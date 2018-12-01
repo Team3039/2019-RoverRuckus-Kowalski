@@ -16,9 +16,6 @@ public interface Values {
      double driveSpeed = .7;
      double turningSpeed= .5;
      double encoderPower= 0;
-     double intakeDown = -1;
-     double intakeMiddle = 0;
-     double intakeUp = 1;
 
 }
 
