@@ -13,6 +13,5 @@ public interface Values {
      double strafeSpeed= .7;
      double intakeDown = 0;
      double intakeStraight = .5;
-
-}
+ }
 
