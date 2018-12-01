@@ -26,6 +26,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public DcMotor extension = null;
     public DcMotor arm = null;
     public Servo intakePivot = null;
+    public Servo latch = null;
 
     @Override
     public void runOpMode()  {
@@ -41,6 +42,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
         extension = hardwareMap.get (DcMotor.class, "extension");
         arm = hardwareMap.get (DcMotor.class, "arm");
         intakePivot = hardwareMap.get (Servo.class, "intakePivot");
+        latch = hardwareMap.get(Servo.class, "latch");
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
