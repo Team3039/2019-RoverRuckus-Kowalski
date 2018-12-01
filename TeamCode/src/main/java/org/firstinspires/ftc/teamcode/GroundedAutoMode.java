@@ -60,14 +60,14 @@ public class GroundedAutoMode extends LinearOpMode implements Values {
 
             drive(.4);
             sleep(2000);
-//            setIntakePosition (intakeStraight);
-//            sleep (250);
-//            shootMineral();
-//            sleep (250);
-//            turnLeft (.4);
-//            sleep (250);
-//            drive (.4);
-//            sleep (2000);
+            setIntakePosition (intakeStraight);
+            sleep (250);
+            shootMineral();
+            sleep (250);
+            turnLeft (.4);
+            sleep (250);
+            drive (.4);
+            sleep (2000);
 
         }
     }
