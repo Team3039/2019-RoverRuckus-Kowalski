@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-public class ArmAutoRed extends TeleOpMode implements Values {
+public class AutoMode extends TeleOpMode implements Values {
 
     private ElapsedTime runtime = new ElapsedTime();
     public DcMotor leftFrontDrive = null;
