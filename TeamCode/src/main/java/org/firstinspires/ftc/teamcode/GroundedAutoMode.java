@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-public class AutoMode extends LinearOpMode implements Values {
+/**
+ * Created by Wildcat Robotics Programming Team  on 12/1/2018.
+ */
+
+public class GroundedAutoMode extends LinearOpMode implements Values {
 
     private ElapsedTime runtime = new ElapsedTime();
     public DcMotor leftFrontDrive = null;
@@ -54,34 +56,18 @@ public class AutoMode extends LinearOpMode implements Values {
         while (opModeIsActive()) {
             runtime.reset();
 
-            delatch();
-            sleep(2000);
-            setArmPower(.4);
-            sleep(750);
-            setArmPower(0);
-            setExtensionPower(.9);
-            setIntakePosition(intakeStraight);
-            sleep(2750);
-            setExtensionPower(0);
-            strafeLeft();
-            sleep(250);
-            drive(0);
-            sleep(100);
-            drive(.8);
-            sleep(125);
-            drive(0);
-            sleep(100);
-            strafeRight();
-            sleep(250);
-            drive(.7);
-            sleep(350);
+            drive(.4);
+            sleep (2000);
+            setIntakePosition (intakeStraight);
+            sleep (250);
             shootMineral();
-            sleep(500);
-        }
+            sleep (250);
+            turnLeft (.4);
+            sleep (250);
+            drive (.4);
+            sleep (2000);
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.update();
-    }
+        }
 
     public void getMineral() {
         intakeA.setPower(.4);
@@ -127,16 +113,16 @@ public class AutoMode extends LinearOpMode implements Values {
     }
 
     public void drive(double power) {
-        leftFrontDrive.setPower(-power);
+        leftFrontDrive.setPower(power);
         rightFrontDrive.setPower(power);
-        leftBackDrive.setPower(-power);
+        leftBackDrive.setPower(power);
         rightBackDrive.setPower(power);
     }
     public void turnRight (double power){
-        leftFrontDrive.setPower (power);
-        rightFrontDrive.setPower (-power);
-        leftBackDrive.setPower (power);
-        rightBackDrive.setPower (-power);
+            leftFrontDrive.setPower (power);
+            rightFrontDrive.setPower (-power);
+            leftBackDrive.setPower (power);
+            rightBackDrive.setPower (-power);
     }
     public void turnLeft (double power){
         leftFrontDrive.setPower (-power);
@@ -148,3 +134,4 @@ public class AutoMode extends LinearOpMode implements Values {
 
 }
 
+}

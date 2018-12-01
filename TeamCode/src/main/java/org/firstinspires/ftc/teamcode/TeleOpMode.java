@@ -49,7 +49,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         intakeA.setDirection(DcMotor.Direction.FORWARD);
-        intakeB.setDirection (DcMotor.Direction.FORWARD);
+        intakeB.setDirection (DcMotor.Direction.REVERSE);
         extension.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection (DcMotor.Direction.FORWARD);
         intakePivot.setDirection(Servo.Direction.FORWARD);
@@ -67,7 +67,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double armPower;
             double drive = gamepad1.left_stick_y;
             double turn = -gamepad1.right_stick_x;
-            double armStick = gamepad2.right_stick_y;
+            double armStick = gamepad2.right_stick_x;
 
             if (gamepad1.left_bumper) {
                 strafeLeft();
@@ -91,9 +91,9 @@ public class TeleOpMode extends LinearOpMode implements Values {
             arm.setPower(armPower);
 
             //Button Inputs
-            if (gamepad2.a) {
+            if (gamepad2.left_trigger >.5) {
                 getMineral();
-            } else if (gamepad2.b){
+            } else if (gamepad2.right_trigger>.5){
                 shootMineral();
             }
             else {
@@ -175,6 +175,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
         leftBackDrive.setPower(-power);
         rightBackDrive.setPower(power);
     }
+
 
 
 }
