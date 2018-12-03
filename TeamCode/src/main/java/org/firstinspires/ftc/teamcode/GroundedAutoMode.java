@@ -58,16 +58,18 @@ public class GroundedAutoMode extends LinearOpMode implements Values {
         while (opModeIsActive()) {
             runtime.reset();
 
-            drive(.4);
-            sleep(2000);
-            setIntakePosition (intakeStraight);
-            sleep (250);
-            shootMineral();
-            sleep (250);
-            turnLeft (.4);
-            sleep (250);
-            drive (.4);
-            sleep (2000);
+            while(getRuntime() < 3.5) {
+                drive(.95);
+            }
+            drive(0);
+//            setIntakePosition (intakeStraight);
+//            sleep (250);
+//            shootMineral();
+//            sleep (250);
+//            turnLeft (.4);
+//            sleep (250);
+//            drive (.4);
+//            sleep (2000);
 
         }
     }
@@ -95,7 +97,7 @@ public class GroundedAutoMode extends LinearOpMode implements Values {
     }
 
     public void delatch() {
-        latch.setPosition(-1);
+        latch.setPosition(0);
     }
 
     public void latch() {

@@ -66,7 +66,7 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double rightBackPower;
             double armPower;
             double drive = gamepad1.left_stick_y;
-            double turn = -gamepad1.right_stick_x;
+            double turn = -gamepad1.right_stick_x*.85 ;
             double armStick = gamepad2.left_stick_y;
 
             if (gamepad1.left_bumper) {
@@ -91,9 +91,9 @@ public class TeleOpMode extends LinearOpMode implements Values {
             arm.setPower(armPower);
 
             //Button Inputs
-            if (gamepad2.left_trigger >.5) {
+            if (gamepad1.a) {
                 getMineral();
-            } else if (gamepad2.right_trigger>.5){
+            } else if (gamepad1.b){
                 shootMineral();
             }
             else {
@@ -107,15 +107,25 @@ public class TeleOpMode extends LinearOpMode implements Values {
             }
 
              if (gamepad1.left_trigger > .5){
-                 setExtensionPower(.4);
+                 setExtensionPower(.9);
              }
              else if(gamepad1.right_trigger>.5) {
-                 setExtensionPower(-.4);
+                 setExtensionPower(-.9);
              }
              else {
                  setExtensionPower(0);
              }
 
+             if (gamepad1.x){
+                 delatch();
+             }
+
+             if(gamepad2.y) {
+                 intakePivot.setPosition(intakeDown);
+             }
+             else {
+                 intakePivot.setPosition(intakeStraight);
+             }
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
         }
@@ -123,13 +133,13 @@ public class TeleOpMode extends LinearOpMode implements Values {
     }
 
     public void getMineral() {
-        intakeA.setPower(.4);
-        intakeB.setPower(.4);
+        intakeA.setPower(.5);
+        intakeB.setPower(.5);
     }
 
     public void shootMineral() {
-        intakeA.setPower(-.4);
-        intakeB.setPower(-.4);
+        intakeA.setPower(-.5);
+        intakeB.setPower(-.5);
     }
 
     public void stopMineral() {
@@ -149,11 +159,11 @@ public class TeleOpMode extends LinearOpMode implements Values {
     }
 
     public void delatch() {
-        latch.setPosition(-1);
+        latch.setPosition(.25);
     }
 
     public void latch() {
-        latch.setPosition(1);
+        latch.setPosition(0);
     }
     public void strafeRight() {
         leftFrontDrive.setPower(-strafeSpeed);
