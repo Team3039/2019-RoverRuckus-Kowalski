@@ -20,13 +20,13 @@ public class TeleOpMode extends LinearOpMode implements Values {
     public DcMotor leftBackDrive= null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotor intakeA = null;
-    public DcMotor intakeB = null;
-
+    public DcMotor intake = null;
+    public DcMotor climb = null;
     public DcMotor extension = null;
     public DcMotor arm = null;
-    public Servo intakePivot = null;
-    public Servo latch = null;
+
+
+
 
     @Override
     public void runOpMode()  {
@@ -37,22 +37,21 @@ public class TeleOpMode extends LinearOpMode implements Values {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontMotor");
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftRearMotor");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightRearMotor");
-        intakeA = hardwareMap.get(DcMotor.class, "intakeA");
-        intakeB = hardwareMap.get(DcMotor.class, "intakeB");
+        intake = hardwareMap.get(DcMotor.class, "intake");
         extension = hardwareMap.get (DcMotor.class, "extension");
         arm = hardwareMap.get (DcMotor.class, "arm");
-        intakePivot = hardwareMap.get (Servo.class, "intakePivot");
-        latch = hardwareMap.get(Servo.class, "latch");
+        climb = hardwareMap.get (DcMotor.class, "climb");
+
+
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        intakeA.setDirection(DcMotor.Direction.FORWARD);
-        intakeB.setDirection (DcMotor.Direction.REVERSE);
+        intake.setDirection(DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection (DcMotor.Direction.FORWARD);
-        intakePivot.setDirection(Servo.Direction.FORWARD);
+        climb.setDirection (DcMotor.Direction.REVERSE);
 
         waitForStart();
         runtime.reset();
@@ -67,13 +66,16 @@ public class TeleOpMode extends LinearOpMode implements Values {
             double armPower;
             double drive = gamepad1.left_stick_y;
             double turn = -gamepad1.right_stick_x*.85 ;
-            double armStick = gamepad2.left_stick_y;
+            double armStick = gamepad2.right_stick_y;
+
 
             if (gamepad1.left_bumper) {
                 strafeLeft();
+                //Press left bumper to strafe left
             }
             else if (gamepad1.right_bumper) {
                 strafeRight();
+                //Press right bumper to strafe right
             }
             else {
                 leftFrontPower = Range.clip(drive + turn, -.95, .95);
@@ -93,83 +95,80 @@ public class TeleOpMode extends LinearOpMode implements Values {
             //Button Inputs
             if (gamepad1.a) {
                 getMineral();
+                //Press to suck in Mineral
             } else if (gamepad1.b){
                 shootMineral();
+                //Press to shoot the Mineral
             }
             else {
                 stopMineral();
             }
-            if (gamepad2.y) {
-                setIntakePosition(intakeDown);
-            }
-            else {
-                setIntakePosition(intakeStraight);
-            }
-
-             if (gamepad1.left_trigger > .5){
+             if (gamepad2.left_trigger > .5){
                  setExtensionPower(.9);
+                 //Press left trigger to move the extension power up
              }
-             else if(gamepad1.right_trigger>.5) {
+             else if(gamepad2.right_trigger>.5) {
                  setExtensionPower(-.9);
+                 //Press right trigger to move the extension down
              }
              else {
                  setExtensionPower(0);
              }
 
-             if (gamepad1.x){
-                 delatch();
-             }
+             //Climbing
+            if (gamepad1.dpad_up) {
+                 setClimbPower (.95);
+                 //Move the d-pad upwards to climb upwards
+            }
+            else if (gamepad1.dpad_down){
+                 setClimbPower (-.95);
+                 //Move the d-pad downwards to climb downwards
+            }
+            else{
+                setClimbPower (0);
+            }
 
-             if(gamepad2.y) {
-                 intakePivot.setPosition(intakeDown);
-             }
-             else {
-                 intakePivot.setPosition(intakeStraight);
-             }
+
+
+
+
+
+
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData ( "Latch Position",  +.25);
             telemetry.update();
         }
 
     }
 
     public void getMineral() {
-        intakeA.setPower(.5);
-        intakeB.setPower(.5);
+        intake.setPower(.5);
     }
 
     public void shootMineral() {
-        intakeA.setPower(-.5);
-        intakeB.setPower(-.5);
+        intake.setPower(-.5);
     }
 
     public void stopMineral() {
-        intakeA.setPower(0);
-        intakeB.setPower(0);
+        intake.setPower(0);
     }
-    public void setIntakePosition(double position) {
-        intakePivot.setPosition(position);
-    }
+
+
 
     public void setExtensionPower(double power) {
         extension.setPower(power);
     }
 
-    public void setArmPower(double power) {
-        arm.setPower(power);
-    }
+    public void setArmPower(double power) {arm.setPower(power);}
 
-    public void delatch() {
-        latch.setPosition(.25);
-    }
+    public void setClimbPower (double power) {climb.setPower (power);}
 
-    public void latch() {
-        latch.setPosition(0);
-    }
+
     public void strafeRight() {
         leftFrontDrive.setPower(-strafeSpeed);
         leftBackDrive.setPower(strafeSpeed);
         rightFrontDrive.setPower(strafeSpeed);
-        rightBackDrive.setPower(-strafeSpeed);
+        rightBackDrive.setPower (-strafeSpeed);
     }
 
     public void strafeLeft() {

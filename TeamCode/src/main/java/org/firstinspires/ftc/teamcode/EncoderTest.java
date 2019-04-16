@@ -1,18 +1,17 @@
-
-
-//MAKE A FREAKING ENCODER
 package org.firstinspires.ftc.teamcode;
-
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-@Autonomous
-public class AutoMode extends LinearOpMode implements Values {
 
+/**
+ * Created by Wildcat Robotics Programming Team  on 12/4/2018.
+ */
+
+@Autonomous
+public class EncoderTest extends LinearOpMode implements Values {
     private ElapsedTime runtime = new ElapsedTime();
     public DcMotor leftFrontDrive = null;
     public DcMotor rightFrontDrive = null;
@@ -22,7 +21,7 @@ public class AutoMode extends LinearOpMode implements Values {
     public DcMotor intake = null;
     public DcMotor extension = null;
     public DcMotor arm = null;
-    public DcMotor climb= null;
+    public DcMotor climb = null;
 
 
     @Override
@@ -37,7 +36,7 @@ public class AutoMode extends LinearOpMode implements Values {
         intake = hardwareMap.get(DcMotor.class, "intake");
         extension = hardwareMap.get(DcMotor.class, "extension");
         arm = hardwareMap.get(DcMotor.class, "arm");
-        climb = hardwareMap.get(DcMotor.class, "climb");
+        climb = hardwareMap.get (DcMotor.class, "climb");
 
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -47,37 +46,72 @@ public class AutoMode extends LinearOpMode implements Values {
         intake.setDirection(DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
-        climb.setDirection(DcMotor.Direction.REVERSE);
+        climb.setDirection (DcMotor.Direction.REVERSE);
 
+        //resets encoder count kept by leftFrontDrive
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets leftFrontDrive to run to a the the target encoder position
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //although this is the default mode, sets other motors to run without any regard to an encoder
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        telemetry.addData("Mode", "waiting");
+        telemetry.update();
+
+        //waits for the start button to be pressed
         waitForStart();
-        runtime.reset();
 
-        while (opModeIsActive()) {
-            while (getRuntime() <= 12.8) {
-                setClimbPower(.95);
-            }
-            while (getRuntime() > 12.8 && getRuntime() <= 13.3) {
-                setClimbPower(0);
-            }
-            while (getRuntime() > 13.3 && getRuntime() <= 15.1) {
-                turnLeft(.55);
-            }
-            while (getRuntime() > 15.1 && getRuntime() <= 17.1) {
-                turnLeft(0);
-            }
-            while (getRuntime() > 17.1 && getRuntime() <= 18.1) {
-                drive(-.95);
-            }
-            while (getRuntime() > 18.1 && getRuntime() <= 30) {
-                drive (0);
-            }
+        telemetry.addData("Mode", "running");
+        telemetry.update();
 
+        //gives leftFrontDrive a target count (560= 2 rotations)
+        leftFrontDrive.setTargetPosition(560);
 
+        //set power to all motors in order to star movement
+        leftFrontDrive.setPower(-.25);
+        rightFrontDrive.setPower(-.25);
+        leftBackDrive.setPower(-.25);
+        rightBackDrive.setPower(-.25);
 
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //wait while opmode is active and leftFrontDrive is busy running to position
+        while (opModeIsActive() && leftFrontDrive.isBusy()) {
+
+            telemetry.addData("encoder-fwd", leftFrontDrive.getCurrentPosition() + "busy=" + leftFrontDrive.isBusy());
             telemetry.update();
+            idle();
+
+
+        }
+
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+
+
+
+        // set motor power to zero to turn off motors. The motors stop on their own but
+        // power is still applied so we turn off the power.
+
+        leftFrontDrive.setPower(0.0);
+        rightFrontDrive.setPower(0.0);
+        leftBackDrive.setPower(0.0);
+        rightBackDrive.setPower(0.0);
+
+        // wait 5 sec to you can observe the final encoder position.
+
+        resetStartTime();
+
+        while (opModeIsActive() && getRuntime() < 5) {
+            telemetry.addData("encoder-fwd-end", leftFrontDrive.getCurrentPosition() + "  busy=" + leftFrontDrive.isBusy());
+            telemetry.update();
+            idle();
         }
     }
+
+
+
     public void getMineral() {
         intake.setPower(.4);
     }
@@ -87,16 +121,13 @@ public class AutoMode extends LinearOpMode implements Values {
     }
 
 
+
     public void setExtensionPower(double power) {
         extension.setPower(power);
     }
 
     public void setArmPower(double power) {
         arm.setPower(power);
-    }
-
-    public void setClimbPower (double power) {
-        climb.setPower(power);
     }
 
     public void strafeLeft() {
@@ -114,18 +145,18 @@ public class AutoMode extends LinearOpMode implements Values {
     }
 
     public void drive(double power) {
-        leftFrontDrive.setPower(power);
+        leftFrontDrive.setPower(-power);
         rightFrontDrive.setPower(power);
-        leftBackDrive.setPower(power);
+        leftBackDrive.setPower(-power);
         rightBackDrive.setPower(power);
     }
-    public void turnLeft (double power){
+    public void turnRight (double power){
         leftFrontDrive.setPower (power);
         rightFrontDrive.setPower (-power);
         leftBackDrive.setPower (power);
         rightBackDrive.setPower (-power);
     }
-    public void turnRight (double power){
+    public void turnLeft (double power){
         leftFrontDrive.setPower (-power);
         rightFrontDrive.setPower (power);
         leftBackDrive.setPower (-power);
@@ -134,6 +165,6 @@ public class AutoMode extends LinearOpMode implements Values {
 
 
 
+
+
 }
-
-
